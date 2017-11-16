@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="JSoundSynthesizer:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/JSoundSynthesizer_jar</output-path>
+    <root id="archive" name="JSoundSynthesizer.jar">
+      <element id="module-output" name="JSoundSynthesizer" />
+    </root>
+  </artifact>
+</component>

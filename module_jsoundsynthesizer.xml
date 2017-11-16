@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_jsoundsynthesizer" default="compile.module.jsoundsynthesizer">
+  <dirname property="module.jsoundsynthesizer.basedir" file="${ant.file.module_jsoundsynthesizer}"/>
+  
+  <property name="module.jdk.home.jsoundsynthesizer" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.jsoundsynthesizer" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.jsoundsynthesizer" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.jsoundsynthesizer" value="-encoding UTF-8 -source 9 -target 9 ${compiler.args}"/>
+  
+  <property name="jsoundsynthesizer.output.dir" value="${module.jsoundsynthesizer.basedir}/out/production/JSoundSynthesizer"/>
+  <property name="jsoundsynthesizer.testoutput.dir" value="${module.jsoundsynthesizer.basedir}/out/test/JSoundSynthesizer"/>
+  
+  <path id="jsoundsynthesizer.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="jsoundsynthesizer.module.production.classpath">
+    <path refid="${module.jdk.classpath.jsoundsynthesizer}"/>
+  </path>
+  
+  <path id="jsoundsynthesizer.runtime.production.module.classpath">
+    <pathelement location="${jsoundsynthesizer.output.dir}"/>
+  </path>
+  
+  <path id="jsoundsynthesizer.module.classpath">
+    <path refid="${module.jdk.classpath.jsoundsynthesizer}"/>
+    <pathelement location="${jsoundsynthesizer.output.dir}"/>
+  </path>
+  
+  <path id="jsoundsynthesizer.runtime.module.classpath">
+    <pathelement location="${jsoundsynthesizer.testoutput.dir}"/>
+    <pathelement location="${jsoundsynthesizer.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.jsoundsynthesizer">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.jsoundsynthesizer">
+    <patternset refid="excluded.from.module.jsoundsynthesizer"/>
+  </patternset>
+  
+  <path id="jsoundsynthesizer.module.sourcepath">
+    <dirset dir="${module.jsoundsynthesizer.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.jsoundsynthesizer" depends="compile.module.jsoundsynthesizer.production,compile.module.jsoundsynthesizer.tests" description="Compile module JSoundSynthesizer"/>
+  
+  <target name="compile.module.jsoundsynthesizer.production" depends="register.custom.compilers" description="Compile module JSoundSynthesizer; production classes">
+    <mkdir dir="${jsoundsynthesizer.output.dir}"/>
+    <javac2 destdir="${jsoundsynthesizer.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.jsoundsynthesizer}/javac">
+      <compilerarg line="${compiler.args.jsoundsynthesizer}"/>
+      <bootclasspath refid="jsoundsynthesizer.module.bootclasspath"/>
+      <classpath refid="jsoundsynthesizer.module.production.classpath"/>
+      <src refid="jsoundsynthesizer.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.jsoundsynthesizer"/>
+    </javac2>
+    
+    <copy todir="${jsoundsynthesizer.output.dir}">
+      <fileset dir="${module.jsoundsynthesizer.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.jsoundsynthesizer.tests" depends="register.custom.compilers,compile.module.jsoundsynthesizer.production" description="compile module JSoundSynthesizer; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.jsoundsynthesizer" description="cleanup module">
+    <delete dir="${jsoundsynthesizer.output.dir}"/>
+    <delete dir="${jsoundsynthesizer.testoutput.dir}"/>
+  </target>
+</project>
