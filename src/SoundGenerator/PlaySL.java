@@ -28,28 +28,19 @@ class PlaySL{
 
         @Override
         public void run() {
-                long sleepTime = (soundLine.getMicrosecondLength()/1000);
-
-                if(soundLine != null) {
-                    System.out.println("Sound length (ms): " + sleepTime);
-                    soundLine.start();
-                    long s = System.nanoTime();
-
-                    while (soundLine.isOpen()){
-                        try {
-                            Thread.sleep(sleepTime);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        soundLine.close();
+            long sleepTime = (soundLine.getMicrosecondLength()/1000);
+            if(soundLine != null) {
+                soundLine.start();
+                while (soundLine.isOpen()){
+                    try {
+                        Thread.sleep(sleepTime);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                    System.out.println("time : " + (System.nanoTime() - s) / 1000000000.0);
-
+                    soundLine.close();
                 }
-
-
+            }
         }
-
     }
 
 }

@@ -15,6 +15,7 @@ public class Mario {
       
 
        JSoundSynthesizer synthesizer = new JSoundSynthesizer();
+      // synthesizer.setSampleRate(44000);
 
        synthesizer.addTone (330,100);synthesizer.addPause(100);
        synthesizer.addTone (330,100);synthesizer.addPause(300);

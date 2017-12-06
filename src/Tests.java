@@ -7,7 +7,6 @@ import java.io.IOException;
 public class Tests {
 
     public static void main(String[] args) throws InterruptedException{
-        JSoundSynthesizer sound;
         try {
             Scanner scanner = new Scanner(System.in);
             switch (scanner.next()){

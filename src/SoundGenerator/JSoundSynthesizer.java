@@ -20,19 +20,29 @@ public class JSoundSynthesizer {
     private List<byte[]> soundByte = new ArrayList<>();
     private int size = 0;
 
-    /**
-     * angleMult from 0.1
-     */
+
     private boolean reverse = false;
     private int channel = 2;
-    public double angleMult = 1;
-    public int sampleRate = 8000;
-    public void twoChannel(boolean twoChannel) {
-        if(twoChannel)
-            this.channel = 2;
-        else
-            this.channel = 1;
+    private double angleMult = 1;
+    private int sampleRate = 8000;
+    private double sampleRateSec = 592.59;
+
+    public void setAngleMult(double angleMult) {
+        if(angleMult >= 0.1)
+            this.angleMult = angleMult;
     }
+
+    public void setSampleRate(int sampleRate) {
+        if(sampleRate >= 0) {
+            this.sampleRate = sampleRate;
+            sampleRateSec = sampleRate/13.5;
+        }
+    }
+
+    public void useTwoChannels(boolean twoChannel) {
+        this.channel = twoChannel ? 2 : 1;
+    }
+
     public void makeReverse(){
         this.reverse = true;
     }
@@ -61,9 +71,8 @@ public class JSoundSynthesizer {
 
         int intFPW = this.sampleRate/frequency;
 
-        double SRconvert = 592.59;
-
-        double toByteSize = this.sampleRate/SRconvert;
+        double toByteSize = this.sampleRate/ this.sampleRateSec;
+        System.out.println(toByteSize);
 
         int sizeOfTone = (int)toByteSize*duration;
 
@@ -71,18 +80,15 @@ public class JSoundSynthesizer {
 
         for(int i=0; i<sizeOfTone; i++){
             double angle = ((i*2)/((float)intFPW))*(Math.PI);
-            buff[i]=getByteValue(angle);
-            buff[(i)]=getByteValue(this.angleMult*angle);
+            buff[i]=getByteValue(this.angleMult*angle);
         }
-        this.size+=buff.length;
 
-        //System.out.println(buff.length);
+        this.size+=buff.length;
 
         soundByte.add(buff);
     }
 
     private void genBuffer(List<byte[]> buff) throws LineUnavailableException, IOException {
-
 
         AudioFormat formatOfPart = new AudioFormat(
                 this.sampleRate,
@@ -91,9 +97,9 @@ public class JSoundSynthesizer {
                 true,
                 false
         );
-        System.out.println("Byte array size : " + this.size);
 
         byte[] newBuff = new byte[this.size];
+
         int position = 0;
 
         for (int i = 0; i < buff.size(); i++) {
@@ -106,15 +112,14 @@ public class JSoundSynthesizer {
 
         byte[] b = newBuff;
 
-
         AudioInputStream ais = new AudioInputStream(new ByteArrayInputStream(b), formatOfPart, newBuff.length);
+
         soundLine.open( ais );
     }
 
     public void play() throws IOException, LineUnavailableException {
         soundLine = AudioSystem.getClip();
         genBuffer(soundByte);
-        //readMP3file();
         PlaySL playSL = new PlaySL(this);
         playSL.startSoundLine();
     }
